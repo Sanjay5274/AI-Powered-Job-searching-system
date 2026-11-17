@@ -25,6 +25,8 @@ import ATSChecker from "./pages/ATSChecker.jsx";
 import LearningRoadmap from "./pages/LearningRoadmap.jsx";
 import CourseRecommendations from "./pages/CourseRecommendations.jsx";
 import InterviewPreparation from "./pages/InterviewPreparation.jsx";
+import JobPortal from "./pages/JobPortal.jsx";
+import MyApplications from "./pages/MyApplications.jsx";
 
 import "./App.css";
 
@@ -154,6 +156,22 @@ function App() {
   element={
     <ProtectedRoute>
       <InterviewPreparation />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/jobs"
+  element={
+    <ProtectedRoute>
+      <JobPortal />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/applications"
+  element={
+    <ProtectedRoute>
+      <MyApplications />
     </ProtectedRoute>
   }
 />
