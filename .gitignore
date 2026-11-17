@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+*/node_modules/
+package-lock.json
+
+# Python virtual environment & cache
+venv/
+*/venv/
+__pycache__/
+*.pyc
+
+# Production build artifacts
+dist/
+dist-ssr/
+*.local
+
+# Editor directories
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

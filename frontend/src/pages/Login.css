@@ -1,0 +1,512 @@
+ /* LOGIN PAGE */
+
+.login-page {
+  min-height: 100vh;
+  background: #f3f6ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  font-family: Arial, sans-serif;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 700px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(20, 35, 90, 0.12);
+}
+
+/* LEFT SIDE */
+
+.login-left {
+  padding: 35px 65px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #173b85, #3979f6);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.login-brand h2 {
+  color: #172554;
+  font-size: 23px;
+  margin: 0;
+}
+
+.login-brand span {
+  font-size: 12px;
+  color: #71809c;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 410px;
+  margin: 35px auto;
+}
+
+.welcome-tag {
+  color: #3473e9;
+  background: #eaf1ff;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.login-heading h1 {
+  font-size: 36px;
+  color: #172554;
+  margin: 23px 0 10px;
+  letter-spacing: -1px;
+}
+
+.login-heading p {
+  color: #7b8499;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+/* INPUT FIELDS */
+
+.login-field {
+  margin-bottom: 20px;
+}
+
+.login-field label {
+  display: block;
+  color: #263653;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid #dce3ef;
+  border-radius: 9px;
+  background: #fafbff;
+  outline: none;
+  font-size: 14px;
+}
+
+.login-field input:focus {
+  border-color: #3979f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(57, 121, 246, 0.09);
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 65px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #3473e9;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* OPTIONS */
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0 23px;
+  font-size: 12px;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #69758b;
+}
+
+.remember-label input {
+  width: auto;
+  accent-color: #3473e9;
+}
+
+.forgot-text {
+  color: #3473e9;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* SIGN IN BUTTON */
+
+.login-submit {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 9px;
+  color: white;
+  background: linear-gradient(135deg, #173b85, #3979f6);
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(57, 121, 246, 0.25);
+}
+
+.login-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* MESSAGES */
+
+.login-message {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.login-message.success {
+  color: #18733c;
+  background: #e2f8e9;
+}
+
+.login-message.error {
+  color: #b42318;
+  background: #fff0f0;
+}
+
+.login-divider {
+  text-align: center;
+  border-bottom: 1px solid #e5eaf2;
+  margin: 28px 0 20px;
+  line-height: 0;
+}
+
+.login-divider span {
+  background: white;
+  padding: 0 12px;
+  color: #a0a9ba;
+  font-size: 11px;
+}
+
+.register-text {
+  text-align: center;
+  color: #7b8499;
+  font-size: 13px;
+}
+
+.register-text a {
+  color: #3473e9;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register-text a:hover {
+  text-decoration: underline;
+}
+
+.login-footer {
+  color: #a0a9ba;
+  font-size: 11px;
+}
+
+/* RIGHT BRANDING PANEL */
+
+.login-right {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  color: white;
+  background: linear-gradient(145deg, #102d70, #2563d9, #4389fa);
+}
+
+.branding-content {
+  position: relative;
+  z-index: 2;
+  max-width: 450px;
+}
+
+.ai-badge {
+  display: inline-block;
+  padding: 9px 15px;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 30px;
+  background: rgba(255,255,255,0.1);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.branding-content h1 {
+  font-size: 43px;
+  line-height: 1.2;
+  margin: 28px 0 18px;
+  color: white;
+  letter-spacing: -1px;
+}
+
+.branding-content h1 span {
+  color: #a9d4ff;
+}
+
+.branding-content > p {
+  color: #e0ebff;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* AI ILLUSTRATION */
+
+.ai-illustration {
+  position: relative;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.ai-circle {
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 55px rgba(255,255,255,0.12);
+}
+
+.ai-face {
+  width: 105px;
+  height: 105px;
+  border-radius: 30px;
+  background: linear-gradient(145deg, #ffffff, #c5dcff);
+  color: #2563d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.ai-face span {
+  font-size: 15px;
+}
+
+.ai-smile {
+  position: absolute;
+  width: 25px;
+  height: 12px;
+  border-bottom: 3px solid #2563d9;
+  border-radius: 50%;
+  bottom: 27px;
+}
+
+.floating-card {
+  position: absolute;
+  background: white;
+  color: #172554;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.resume-card {
+  left: 0;
+  top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resume-card strong,
+.resume-card small {
+  display: block;
+}
+
+.resume-card strong {
+  font-size: 10px;
+}
+
+.resume-card small {
+  font-size: 9px;
+  color: #8290a8;
+}
+
+.resume-card b {
+  color: #16a36a;
+}
+
+.score-card {
+  right: 0;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.score-card small {
+  color: #8290a8;
+  font-size: 10px;
+}
+
+.score-card strong {
+  font-size: 25px;
+  color: #2563eb;
+}
+
+.score-card span {
+  color: #16a36a;
+  font-size: 9px;
+}
+
+/* FEATURES */
+
+.branding-features {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  font-size: 13px;
+  color: #edf4ff;
+}
+
+.branding-features span {
+  color: #9ff3c4;
+  margin-right: 9px;
+  font-weight: bold;
+}
+
+.right-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+
+.glow-one {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  right: -100px;
+}
+
+.glow-two {
+  width: 250px;
+  height: 250px;
+  bottom: -130px;
+  left: -100px;
+}
+
+.branding-bottom {
+  position: absolute;
+  bottom: 22px;
+  color: #c6dcff;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .login-wrapper {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+
+  .login-left {
+    padding: 30px;
+  }
+
+  .login-right {
+    min-height: 650px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 10px;
+  }
+
+  .login-left {
+    padding: 25px 20px;
+  }
+
+  .login-heading h1 {
+    font-size: 30px;
+  }
+
+  .login-right {
+    padding: 35px 22px;
+    min-height: 600px;
+  }
+
+  .branding-content h1 {
+    font-size: 34px;
+  }
+
+  .resume-card {
+    left: -5px;
+  }
+
+  .score-card {
+    right: -5px;
+  }
+}
