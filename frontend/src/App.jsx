@@ -27,6 +27,8 @@ import CourseRecommendations from "./pages/CourseRecommendations.jsx";
 import InterviewPreparation from "./pages/InterviewPreparation.jsx";
 import JobPortal from "./pages/JobPortal.jsx";
 import MyApplications from "./pages/MyApplications.jsx";
+import ResumeBuilder from "./pages/ResumeBuilder.jsx";
+import ResumeComparison from "./pages/ResumeComparison.jsx";
 
 import "./App.css";
 
@@ -172,6 +174,22 @@ function App() {
   element={
     <ProtectedRoute>
       <MyApplications />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/resume-builder"
+  element={
+    <ProtectedRoute>
+      <ResumeBuilder />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/resume-comparison"
+  element={
+    <ProtectedRoute>
+      <ResumeComparison />
     </ProtectedRoute>
   }
 />

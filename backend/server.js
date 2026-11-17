@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const Resume = require("./models/Resume");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const resumeRoutes = require("./routes/resumeRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
 
 connectDB();
@@ -22,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api", jobRoutes);
+app.use("/api/resumes", resumeRoutes);
 
 // Secure Multer configuration for PDF resumes (Max 10MB)
 const uploadPDF = multer({
