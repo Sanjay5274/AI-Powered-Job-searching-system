@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import { toArray, displayItem } from "../utils/resumeHelpers";
+import { apiFetch } from "../utils/apiClient";
 
 function UploadResume() {
   const [file, setFile] = useState(null);
@@ -26,13 +27,10 @@ function UploadResume() {
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/analyze-resume",
+      const response = await apiFetch(
+        "/api/analyze-resume",
         {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           body: formData,
         }
       );

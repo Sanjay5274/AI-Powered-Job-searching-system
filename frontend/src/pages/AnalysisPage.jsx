@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-
 import { toArray, getField, displayItem } from "../utils/resumeHelpers";
-
+import { apiFetch } from "../utils/apiClient";
 import "../App.css";
 
 function AnalysisPage() {
@@ -27,15 +26,7 @@ function AnalysisPage() {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          `http://localhost:5000/api/resume-history/${resumeId}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
+        const response = await apiFetch(`/api/resume-history/${resumeId}`);
 
         const data = await response.json();
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiFetch } from "../utils/apiClient";
 import "./Register.css";
 
 function Register() {
@@ -31,8 +32,8 @@ function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/register",
+      const response = await apiFetch(
+        "/api/auth/register",
         {
           method: "POST",
           headers: {

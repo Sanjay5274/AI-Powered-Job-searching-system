@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import { toArray, displayItem } from "../utils/resumeHelpers";
+import { apiFetch } from "../utils/apiClient";
 
 function JobMatching() {
   const [history, setHistory] = useState([]);
@@ -17,14 +18,7 @@ function JobMatching() {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          "http://localhost:5000/api/resume-history",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await apiFetch("/api/resume-history");
 
         const data = await response.json();
 
@@ -77,13 +71,10 @@ function JobMatching() {
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/match-job",
+      const response = await apiFetch(
+        "/api/match-job",
         {
           method: "POST",
-          headers: {
-            Authorization:`Bearer ${token}`,
-          },
           body: formData,
         }
       );

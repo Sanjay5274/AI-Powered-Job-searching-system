@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
+import { apiFetch } from "../utils/apiClient";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -10,14 +11,7 @@ function Dashboard() {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          "http://localhost:5000/api/resume-history",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await apiFetch("/api/resume-history");
 
         const data = await response.json();
 

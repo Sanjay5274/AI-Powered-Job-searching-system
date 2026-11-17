@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
+import { apiFetch } from "../utils/apiClient";
 import "./CourseRecommendations.css";
 
 function CourseRecommendations() {
@@ -15,14 +16,7 @@ function CourseRecommendations() {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          "http://localhost:5000/api/resume-history",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await apiFetch("/api/resume-history");
 
         const data = await response.json();
 
@@ -54,13 +48,12 @@ function CourseRecommendations() {
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/skill-gap",
+      const response = await apiFetch(
+        "/api/skill-gap",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             jobTitle: jobRole,

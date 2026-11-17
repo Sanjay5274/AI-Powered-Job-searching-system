@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import { apiFetch } from "../utils/apiClient";
 
 function AnalysisHistory() {
   const [history, setHistory] = useState([]);
@@ -13,14 +14,7 @@ function AnalysisHistory() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/resume-history",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiFetch("/api/resume-history");
 
       const data = await response.json();
 
@@ -52,15 +46,9 @@ function AnalysisHistory() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `http://localhost:5000/api/resume-history/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiFetch(`/api/resume-history/${id}`, {
+        method: "DELETE",
+      });
 
       const data = await response.json();
 

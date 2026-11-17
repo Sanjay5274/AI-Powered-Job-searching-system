@@ -1,3 +1,11 @@
+import sys
+import os
+
+# Ensure local venv packages (e.g. PyPDF2) are discoverable
+venv_site = os.path.join(os.path.dirname(__file__), "venv", "Lib", "site-packages")
+if os.path.exists(venv_site) and venv_site not in sys.path:
+    sys.path.insert(len(sys.path), venv_site)
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PyPDF2 import PdfReader
@@ -517,8 +525,38 @@ def match_job():
         if str(skill).strip()
     ))
 
+    # Support uploaded job description file or text
+    if "job_description" in request.files:
+        jd_file = request.files["job_description"]
+        if jd_file.filename != "":
+            try:
+                if jd_file.filename.lower().endswith(".pdf"):
+                    jd_reader = PdfReader(jd_file)
+                    jd_text = ""
+                    for page in jd_reader.pages:
+                        page_text = page.extract_text()
+                        if page_text:
+                            jd_text += page_text + " "
+                else:
+                    jd_text = jd_file.read().decode("utf-8", errors="ignore")
+
+                jd_skills = detect_skills(jd_text.lower())
+                required_skills.extend(jd_skills)
+            except Exception as error:
+                pass
+    elif request.form.get("job_description"):
+        jd_text = request.form.get("job_description")
+        jd_skills = detect_skills(jd_text.lower())
+        required_skills.extend(jd_skills)
+
+    required_skills = list(dict.fromkeys(
+        str(skill).strip().lower()
+        for skill in required_skills
+        if str(skill).strip()
+    ))
+
     if not required_skills:
-        return jsonify({"error": "Enter at least one required skill"}), 400
+        return jsonify({"error": "Enter at least one required skill or upload a valid job description"}), 400
 
     resume_text = ""
 

@@ -4,6 +4,7 @@ const cors = require("cors");
 const multer = require("multer");
 const axios = require("axios");
 const FormData = require("form-data");
+const path = require("path");
 
 const connectDB = require("./config/db");
 const Resume = require("./models/Resume");
@@ -20,10 +21,58 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 
-// Resume upload setup
-const upload = multer({
+// Secure Multer configuration for PDF resumes (Max 10MB)
+const uploadPDF = multer({
   storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === ".pdf" && (file.mimetype === "application/pdf" || file.mimetype === "application/octet-stream")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PDF files are allowed."));
+    }
+  },
 });
+
+// Secure Multer configuration for Job Matching (Resume PDF + optional Job Description PDF/TXT)
+const uploadMatchJob = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (file.fieldname === "resume") {
+      if (ext === ".pdf" && (file.mimetype === "application/pdf" || file.mimetype === "application/octet-stream")) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only PDF files are allowed for resumes."));
+    }
+    if (file.fieldname === "jobDescription") {
+      if ([".pdf", ".txt"].includes(ext) || file.mimetype === "application/pdf" || file.mimetype === "text/plain") {
+        return cb(null, true);
+      }
+      return cb(new Error("Only PDF and TXT files are allowed for job descriptions."));
+    }
+    cb(null, true);
+  },
+});
+
+// Multer error handling wrapper
+const handleUpload = (multerMiddleware) => (req, res, next) => {
+  multerMiddleware(req, res, (err) => {
+    if (err) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({
+          message: "File exceeds the 10 MB size limit.",
+        });
+      }
+      return res.status(400).json({
+        message: err.message || "File upload error.",
+      });
+    }
+    next();
+  });
+};
 
 // Test route
 app.get("/", (req, res) => {
@@ -33,7 +82,7 @@ app.get("/", (req, res) => {
 });
 
 // Resume upload route
-app.post("/api/upload-resume", upload.single("resume"), (req, res) => {
+app.post("/api/upload-resume", handleUpload(uploadPDF.single("resume")), (req, res) => {
   if (!req.file) {
     return res.status(400).json({
       message: "Please upload a resume PDF.",
@@ -50,7 +99,7 @@ app.post("/api/upload-resume", upload.single("resume"), (req, res) => {
 app.post(
   "/api/analyze-resume",
   authMiddleware,
-  upload.single("resume"),
+  handleUpload(uploadPDF.single("resume")),
   async (req, res) => {
     try {
       if (!req.file) {
@@ -177,7 +226,12 @@ app.post(
 app.post(
   "/api/match-job",
   authMiddleware,
-  upload.single("resume"),
+  handleUpload(
+    uploadMatchJob.fields([
+      { name: "resume", maxCount: 1 },
+      { name: "jobDescription", maxCount: 1 },
+    ])
+  ),
   async (req, res) => {
     try {
       const { jobTitle, requiredSkills, resumeId } = req.body;
@@ -190,59 +244,64 @@ app.post(
       }
 
       // Convert required skills into an array
-       let skillsArray = [];
-
-if (Array.isArray(requiredSkills)) {
-  skillsArray = requiredSkills;
-} else if (typeof requiredSkills === "string") {
-  try {
-    const parsed = JSON.parse(requiredSkills);
-
-    skillsArray = Array.isArray(parsed)
-      ? parsed
-      : requiredSkills.split(",");
-  } catch (error) {
-    skillsArray = requiredSkills.split(",");
-  }
-}
+      let skillsArray = [];
+      if (Array.isArray(requiredSkills)) {
+        skillsArray = requiredSkills;
+      } else if (typeof requiredSkills === "string" && requiredSkills.trim()) {
+        try {
+          const parsed = JSON.parse(requiredSkills);
+          skillsArray = Array.isArray(parsed)
+            ? parsed
+            : requiredSkills.split(",");
+        } catch (error) {
+          skillsArray = requiredSkills.split(",");
+        }
+      }
 
       skillsArray = skillsArray
         .map((skill) => String(skill).trim())
         .filter(Boolean);
 
-      if (skillsArray.length === 0) {
+      const resumeFile = req.files && req.files.resume ? req.files.resume[0] : null;
+      const jdFile = req.files && req.files.jobDescription ? req.files.jobDescription[0] : null;
+
+      if (skillsArray.length === 0 && !jdFile) {
         return res.status(400).json({
-          message: "Please enter at least one required skill.",
+          message: "Please enter at least one required skill or upload a job description.",
         });
       }
 
       const form = new FormData();
-
       form.append("job_title", jobTitle.trim());
 
-      form.append(
-        "required_skills",
-        JSON.stringify(skillsArray)
-      );
+      if (skillsArray.length > 0) {
+        form.append("required_skills", JSON.stringify(skillsArray));
+      }
+
+      if (jdFile) {
+        form.append("job_description", jdFile.buffer, {
+          filename: jdFile.originalname,
+          contentType: jdFile.mimetype || "application/octet-stream",
+        });
+      }
 
       let fileName = "";
 
       // OPTION 1: New PDF resume
-      if (req.file) {
-        if (!req.file.originalname.toLowerCase().endsWith(".pdf")) {
+      if (resumeFile) {
+        if (!resumeFile.originalname.toLowerCase().endsWith(".pdf")) {
           return res.status(400).json({
-            message: "Only PDF files are allowed.",
+            message: "Only PDF files are allowed for resumes.",
           });
         }
 
-        form.append("resume", req.file.buffer, {
-          filename: req.file.originalname,
-          contentType: req.file.mimetype,
+        form.append("resume", resumeFile.buffer, {
+          filename: resumeFile.originalname,
+          contentType: resumeFile.mimetype,
         });
 
-        fileName = req.file.originalname;
+        fileName = resumeFile.originalname;
       }
-
       // OPTION 2: Previously uploaded resume
       else if (resumeId) {
         const existingResume = await Resume.findOne({
@@ -269,7 +328,6 @@ if (Array.isArray(requiredSkills)) {
 
         fileName = existingResume.fileName;
       }
-
       // No resume selected
       else {
         return res.status(400).json({
@@ -298,7 +356,7 @@ if (Array.isArray(requiredSkills)) {
 
       if (error.response) {
         return res.status(error.response.status || 500).json({
-          message: "Python AI matching service returned an error.",
+          message: error.response.data?.error || "Python AI matching service returned an error.",
           error: error.response.data,
         });
       }
@@ -496,7 +554,7 @@ app.post(
  app.post(
   "/api/ats-check",
   authMiddleware,
-  upload.single("resume"),
+  handleUpload(uploadPDF.single("resume")),
   async (req, res) => {
     try {
       const { jobDescription, jobTitle, resumeId } = req.body;

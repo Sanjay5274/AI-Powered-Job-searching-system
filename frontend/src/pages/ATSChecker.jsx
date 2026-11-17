@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { apiFetch } from "../utils/apiClient";
 import "./ATSChecker.css";
 
 function ATSChecker() {
@@ -39,13 +40,10 @@ function ATSChecker() {
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/ats-check",
+      const response = await apiFetch(
+        "/api/ats-check",
         {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
           body: formData
         }
       );
